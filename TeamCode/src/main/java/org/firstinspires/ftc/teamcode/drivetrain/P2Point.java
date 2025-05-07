@@ -1,14 +1,13 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.drivetrain;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-// TODO: APPLY MOotr powers in the autonomous mode class, just pull the numbers from here
+// TODO: APPLY Motor powers in the autonomous mode class, just pull the numbers from here
+
+
 public class P2Point {
 
-
+    Localizer localizer;
 
     public double kP, kI, kD; // AXIAL (X/Y) CONSTANTS
     public double hP, hI, hD; // THETA (HEADING) CONSTANTS
@@ -23,9 +22,9 @@ public class P2Point {
     public boolean atTarget;
 
     public void runPID () {
-        double currentX = ;
-        double currentY = ;
-        double currentT = ;
+        double currentX = localizer.getX();
+        double currentY = localizer.getY();
+        double currentT = localizer.getX();
 
         ElapsedTime timer = new ElapsedTime();
 
@@ -44,14 +43,12 @@ public class P2Point {
         double powerY = kP * eY + kI + kD * dY;
         double powerT = hP * eT + hI + hD * dT;
 
-        double denominator = Math.max(Math.abs(powerY) + Math.abs(powerX) + Math.abs(powerT), 1);
+        double denominator = Math.max(Math.abs(powerY) + Math.abs(powerX) + Math.abs(powerT), 1); // Scaling
 
-        double lfPower = (powerY + powerX + powerT) / denominator;
-        double lbPower = (powerY - powerX + powerT) / denominator;
-        double rfPower = (powerY - powerX - powerT) / denominator;
-        double rbPower = (powerY + powerX - powerT) / denominator;
-
-
+        double lfPower = Math.min((powerY + powerX + powerT) / denominator, 1);
+        double lbPower = Math.min((powerY - powerX + powerT) / denominator, 1);
+        double rfPower = Math.min((powerY - powerX - powerT) / denominator, 1);
+        double rbPower = Math.min((powerY + powerX - powerT) / denominator, 1);
 
     }
 
