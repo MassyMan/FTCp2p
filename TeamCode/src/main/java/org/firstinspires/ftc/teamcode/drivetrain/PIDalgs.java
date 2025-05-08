@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 // TODO: APPLY Motor powers in the autonomous mode class, just pull the numbers from here
 
 
-public class P2Point {
+public class PIDalgs {
 
     Localizer localizer;
 
