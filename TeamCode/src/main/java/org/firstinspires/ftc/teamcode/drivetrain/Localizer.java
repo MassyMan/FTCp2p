@@ -10,7 +10,7 @@ public class Localizer {
     IMUHandler imuHandler;
 
     public double currentHeading;
-    public double lastHeading, lastPerp, lastParL, lastParR;
+    public double lastHeading, lastPerp, lastParL, lastParR, deltaHeading;
     public double ticksToInches;
     public double x, y, heading;
 
@@ -24,10 +24,10 @@ public class Localizer {
     }
 
     public void updatePosition() {
-        lastPerp = perpTicks;
-        lastParL = parLTicks;
-        lastParR = parRTicks;
-        lastHeading = currentHeading;
+        lastPerp = encoderHandler.lastPerp;
+        lastParL = encoderHandler.lastParL;
+        lastParR = encoderHandler.lastParR;
+        lastHeading = imuHandler.getLastHeading();
         parLTicks = encoderHandler.getParLTicks();
         parRTicks = encoderHandler.getParRTicks();
         perpTicks = encoderHandler.getPerpTicks();
@@ -35,18 +35,11 @@ public class Localizer {
         parRDist = encoderHandler.parRDist;
         perpDist = encoderHandler.perpDist;
         ticksToInches = encoderHandler.ticksToInches();
-
         currentHeading = imuHandler.getHeading();
-        double deltaHeading = angleWrap(currentHeading - lastHeading);
+        deltaHeading = imuHandler.deltaHeading();
 
-        double deltaPar = ((parRTicks * parLDist + parLTicks * parRDist)/(parRDist+parLDist)); // 2 PARALLEL PODS
-        double deltaPerp = (perpTicks - lastPerp) * ticksToInches - (deltaHeading * perpDist);
-
-        double sinHeading = Math.sin(currentHeading);
-        double cosHeading = Math.cos(currentHeading);
-
-        double dx = deltaPar * cosHeading - deltaPerp * sinHeading;
-        double dy = deltaPar * sinHeading + deltaPerp * cosHeading;
+        double dx = encoderHandler.deltaPar * Math.cos(currentHeading) - encoderHandler.deltaPerp * Math.sin(currentHeading);
+        double dy = encoderHandler.deltaPar * imuHandler.sinHeading() + encoderHandler.deltaPerp * imuHandler.cosHeading();
 
         x += dx;
         y += dy;
@@ -63,9 +56,5 @@ public class Localizer {
         return imuHandler.getHeading();
     }
 
-    private double angleWrap(double angle) {
-        while (angle <= -Math.PI) angle += 2 * Math.PI;
-        while (angle > Math.PI) angle -= 2 * Math.PI;
-        return angle;
-    }
+
 }
