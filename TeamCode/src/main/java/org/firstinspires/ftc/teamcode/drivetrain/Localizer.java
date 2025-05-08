@@ -8,6 +8,7 @@ public class Localizer {
 
     EncoderHandler encoderHandler;
     IMUHandler imuHandler;
+    EncoderSpecial encoderSpecial;
 
     public double currentHeading;
     public double lastHeading, lastPerp, lastParL, lastParR, deltaHeading;
@@ -37,6 +38,8 @@ public class Localizer {
         ticksToInches = encoderHandler.ticksToInches();
         currentHeading = imuHandler.getHeading();
         deltaHeading = imuHandler.deltaHeading();
+
+
 
         double dx = encoderHandler.deltaPar * Math.cos(currentHeading) - encoderHandler.deltaPerp * Math.sin(currentHeading);
         double dy = encoderHandler.deltaPar * imuHandler.sinHeading() + encoderHandler.deltaPerp * imuHandler.cosHeading();
