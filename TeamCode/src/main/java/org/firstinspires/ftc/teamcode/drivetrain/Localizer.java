@@ -25,7 +25,9 @@ public class Localizer {
     }
 
     public void updatePosition() {
-        lastPerp = encoderHandler.lastPerp;
+        lastPerp =
+
+                encoderHandler.lastPerp;
         lastParL = encoderHandler.lastParL;
         lastParR = encoderHandler.lastParR;
         lastHeading = imuHandler.getLastHeading();

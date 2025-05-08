@@ -8,6 +8,16 @@ public class EncoderHandler {
     IMUHandler imuHandler;
     EncoderSpecial encoderSpecial;
 
+    public double lastParL, deltaParL, parLTicks;
+
+    public void updateEncoders() {
+        encoderSpecial.update(parL);
+        lastParL = encoderSpecial.lastPosition;
+        parLTicks = encoderSpecial.currentPosition;
+        deltaParL = encoderSpecial.deltaInches;
+    }
+
+
     public EncoderHandler(HardwareMap hardwareMap) {
         parL = hardwareMap.get(DcMotorEx.class, "leftFront");
         parR = hardwareMap.get(DcMotorEx.class, "rightFront");
@@ -24,6 +34,7 @@ public class EncoderHandler {
         parL.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         parR.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         perp.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+
     }
-    
+
 }

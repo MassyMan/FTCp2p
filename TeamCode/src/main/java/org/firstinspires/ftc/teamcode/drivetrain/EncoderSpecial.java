@@ -16,13 +16,17 @@ public class EncoderSpecial {
 
     public int currentPosition = 0;
     public int lastPosition = 0;
+    public double deltaInches = 0;
 
-    public void update() {
+    public void update(DcMotorEx dcMotorEx) {
         lastPosition = currentPosition;
         currentPosition = Encoder.getCurrentPosition();
+        deltaInches = (currentPosition - lastPosition) * TICKS_PER_INCH;
     }
-
-    public double getDelta () {
+/*
+    public double getDelta (DcMotorEx dcMotorEx) {
         return (currentPosition - lastPosition) * TICKS_PER_INCH;
     }
+
+ */
 }
