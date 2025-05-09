@@ -36,8 +36,8 @@ public class EncoderHandler {
         lastPerp = encoderPerp.lastPosition;
         perpTicks = encoderPerp.currentPosition;
 
-        deltaParCombined = ((parRTicks * parLDist + parLTicks * parRDist)/(parRDist+parLDist));
-        deltaPerp = (perpTicks - lastPerp) * EncoderSpecial.TICKS_PER_INCH - (imuHandler.deltaHeading() * perpDist);
+        deltaParCombined = ((parRTicks * parLDist + parLTicks * parRDist)/(parRDist+parLDist)); // PULLED TO LOCALIZER
+        deltaPerp = (perpTicks - lastPerp) * EncoderSpecial.TICKS_PER_INCH - (imuHandler.deltaHeading() * perpDist); // PULLED TO LOCALIZER
 
     }
 

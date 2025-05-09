@@ -9,19 +9,19 @@ public class PIDalgs {
 
     Localizer localizer;
 
-    public double kP, kI, kD; // AXIAL (X/Y) CONSTANTS
-    public double hP, hI, hD; // THETA (HEADING) CONSTANTS
+    private static final double kP = 0; // AXIAL TUNING CONSTANTS
+    private static final double kI = 0;
+    private static final double kD = 0;
 
-    public double pX, pY, pT; // previous errors
+    private static final double hP = 0; // HEADING TUNING CONSTANTS
+    private static final double hI = 0;
+    private static final double hD = 0;
 
-    public double targetX, targetY, targetT;
-    public double moveSpeed;
+    private double eX, eY, eT; // current errors
 
-    public double axialThreshold; // Threshold for moving on to next path (X/Y Axis)
-    public double thetaThreshold; // Threshold for heading
-    public boolean atTarget;
+    public double lfPower, lbPower, rfPower, rbPower;
 
-    public void runPID () {
+    public void runPID (double targetX, double targetY, double targetT) {
         double currentX = localizer.getX();
         double currentY = localizer.getY();
         double currentT = localizer.getX();
@@ -31,11 +31,15 @@ public class PIDalgs {
         double deltaTime = timer.seconds(); // Delta for time
         timer.reset();
 
-        double eX = targetX - currentX;
-        double eY = targetY - currentY;
-        double eT = targetT - currentT;
+        double pX = eX;
+        double pY = eY;
+        double pT = eT;
 
-        double dX = (eX - pX) / deltaTime;
+        eX = targetX - currentX;
+        eY = targetY - currentY;
+        eT = targetT - currentT;
+
+        double dX = (eX - pX) / deltaTime; // deltas for errors
         double dY = (eY - pY) / deltaTime;
         double dT = (eT - pT) / deltaTime;
 
@@ -45,10 +49,10 @@ public class PIDalgs {
 
         double denominator = Math.max(Math.abs(powerY) + Math.abs(powerX) + Math.abs(powerT), 1); // Scaling
 
-        double lfPower = Math.min((powerY + powerX + powerT) / denominator, 1);
-        double lbPower = Math.min((powerY - powerX + powerT) / denominator, 1);
-        double rfPower = Math.min((powerY - powerX - powerT) / denominator, 1);
-        double rbPower = Math.min((powerY + powerX - powerT) / denominator, 1);
+        lfPower = Math.min((powerY + powerX + powerT) / denominator, 1);
+        lbPower = Math.min((powerY - powerX + powerT) / denominator, 1);
+        rfPower = Math.min((powerY - powerX - powerT) / denominator, 1);
+        rbPower = Math.min((powerY + powerX - powerT) / denominator, 1);
 
     }
 
