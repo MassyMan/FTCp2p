@@ -4,36 +4,40 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class EncoderHandler {
-    private final DcMotorEx parL, parR, perp;
     IMUHandler imuHandler;
-    EncoderSpecial encoderSpecial;
+    HardwareMap hardwareMap;
 
     public double lastParL, deltaParL, parLTicks;
+    public double lastParR, deltaParR, parRTicks;
+    public double lastPerp, deltaPerp, perpTicks;
+    public double deltaHeading;
+    public double deltaParCombined;
 
-    public void updateEncoders() {
-        encoderSpecial.update(parL);
-        lastParL = encoderSpecial.lastPosition;
-        parLTicks = encoderSpecial.currentPosition;
-        deltaParL = encoderSpecial.deltaInches;
-    }
+    public double parLDist = 0; // INCHES
+    public double parRDist = 0;
+    public double perpDist = 0;
 
+    public void updateData() {
+        EncoderSpecial encoderParL = new EncoderSpecial (hardwareMap.get(DcMotorEx.class, "leftFront")); // PORT 0
+        EncoderSpecial encoderParR = new EncoderSpecial (hardwareMap.get(DcMotorEx.class, "rightFront")); // PORT 3
+        EncoderSpecial encoderPerp = new EncoderSpecial (hardwareMap.get(DcMotorEx.class, "rightBack")); // PORT 2
 
-    public EncoderHandler(HardwareMap hardwareMap) {
-        parL = hardwareMap.get(DcMotorEx.class, "leftFront");
-        parR = hardwareMap.get(DcMotorEx.class, "rightFront");
-        perp = hardwareMap.get(DcMotorEx.class, "rightBack");
+        encoderParL.update();
+        lastParL = encoderParL.lastPosition;
+        parLTicks = encoderParL.currentPosition;
+        deltaParL = encoderParL.getDelta();
 
-        initializeEncoders();
-    }
+        encoderParR.update();
+        lastParR = encoderParR.lastPosition;
+        parRTicks = encoderParR.currentPosition;
+        deltaParR = encoderParR.getDelta();
 
-    public void initializeEncoders() {
-        parL.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        parR.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        perp.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        encoderPerp.update();
+        lastPerp = encoderPerp.lastPosition;
+        perpTicks = encoderPerp.currentPosition;
 
-        parL.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        parR.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        perp.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        deltaParCombined = ((parRTicks * parLDist + parLTicks * parRDist)/(parRDist+parLDist));
+        deltaPerp = (perpTicks - lastPerp) * EncoderSpecial.TICKS_PER_INCH - (imuHandler.deltaHeading() * perpDist);
 
     }
 
