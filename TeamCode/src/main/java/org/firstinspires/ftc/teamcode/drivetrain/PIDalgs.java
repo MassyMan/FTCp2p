@@ -8,13 +8,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class PIDalgs {
 
     Localizer localizer;
-
+    ElapsedTime timer = new ElapsedTime();
     private static final double kP = 0; // AXIAL TUNING CONSTANTS
-    private static final double kI = 0;
     private static final double kD = 0;
 
     private static final double hP = 0; // HEADING TUNING CONSTANTS
-    private static final double hI = 0;
     private static final double hD = 0;
 
     private double eX, eY, eT; // current errors
@@ -26,16 +24,14 @@ public class PIDalgs {
         double currentY = localizer.getY();
         double currentT = localizer.getX();
 
-        ElapsedTime timer = new ElapsedTime();
-
         double deltaTime = timer.seconds(); // Delta for time
         timer.reset();
 
-        double pX = eX;
+        double pX = eX; // previous errors
         double pY = eY;
         double pT = eT;
 
-        eX = targetX - currentX;
+        eX = targetX - currentX; // current errors
         eY = targetY - currentY;
         eT = targetT - currentT;
 
@@ -43,13 +39,13 @@ public class PIDalgs {
         double dY = (eY - pY) / deltaTime;
         double dT = (eT - pT) / deltaTime;
 
-        double powerX = kP * eX + kI + kD * dX;
-        double powerY = kP * eY + kI + kD * dY;
-        double powerT = hP * eT + hI + hD * dT;
+        double powerX = kP * eX + kD * dX;
+        double powerY = kP * eY + kD * dY;
+        double powerT = hP * eT + hD * dT;
 
         double denominator = Math.max(Math.abs(powerY) + Math.abs(powerX) + Math.abs(powerT), 1); // Scaling
 
-        lfPower = Math.min((powerY + powerX + powerT) / denominator, 1);
+        lfPower = Math.min((powerY + powerX + powerT) / denominator, 1); // motor powers
         lbPower = Math.min((powerY - powerX + powerT) / denominator, 1);
         rfPower = Math.min((powerY - powerX - powerT) / denominator, 1);
         rbPower = Math.min((powerY + powerX - powerT) / denominator, 1);

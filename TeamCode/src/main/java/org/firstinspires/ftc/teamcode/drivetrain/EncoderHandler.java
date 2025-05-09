@@ -5,7 +5,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class EncoderHandler {
     IMUHandler imuHandler;
-    HardwareMap hardwareMap;
+
+
 
     public double lastParL, deltaParL, parLTicks;
     public double lastParR, deltaParR, parRTicks;
@@ -17,10 +18,17 @@ public class EncoderHandler {
     public double parRDist = 0;
     public double perpDist = 0;
 
+    EncoderSpecial encoderParL, encoderParR, encoderPerp;
+ //   EncoderSpecial encoderParR = new EncoderSpecial (hardwareMap.get(DcMotorEx.class, "rightFront")); // PORT 3
+
+    public EncoderHandler (HardwareMap hardwareMap) {
+        encoderParL = new EncoderSpecial (hardwareMap.get(DcMotorEx.class, "leftFront"));
+        encoderParR = new EncoderSpecial (hardwareMap.get(DcMotorEx.class, "rightFront"));
+        encoderPerp = new EncoderSpecial (hardwareMap.get(DcMotorEx.class, "rightBack"));
+    }
+
     public void updateData() {
-        EncoderSpecial encoderParL = new EncoderSpecial (hardwareMap.get(DcMotorEx.class, "leftFront")); // PORT 0
-        EncoderSpecial encoderParR = new EncoderSpecial (hardwareMap.get(DcMotorEx.class, "rightFront")); // PORT 3
-        EncoderSpecial encoderPerp = new EncoderSpecial (hardwareMap.get(DcMotorEx.class, "rightBack")); // PORT 2
+
 
         encoderParL.update();
         lastParL = encoderParL.lastPosition;
