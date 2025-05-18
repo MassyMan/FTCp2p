@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.drivetrain;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
@@ -10,12 +12,11 @@ public class Localizer {
     IMUHandler imuHandler;
 
     public double currentHeading;
-    public double lastHeading, lastPerp, lastParL, lastParR, deltaHeading;
-    public double ticksToInches;
     public double x, y, heading;
 
-    public int parLTicks, parRTicks, perpTicks;
-    public double parLDist, parRDist, perpDist;
+    public Localizer (HardwareMap hardwareMap) {
+        encoderHandler = new EncoderHandler(hardwareMap);
+    }
 
     public void setCurrentPosition(double X, double Y, double Heading){
         x = X;
@@ -24,8 +25,11 @@ public class Localizer {
     }
 
     public void updatePosition() {
-        double dx = encoderHandler.deltaParCombined * imuHandler.cosHeading() - encoderHandler.deltaPerp * imuHandler.sinHeading();
-        double dy = encoderHandler.deltaPerp * imuHandler.sinHeading() + encoderHandler.deltaPerp * imuHandler.cosHeading();
+        encoderHandler.updateData();
+        imuHandler.update();
+
+        double dx = encoderHandler.deltaParCombined * Math.cos(imuHandler.getLastHeading()) - encoderHandler.deltaPerp * Math.sin(imuHandler.getLastHeading());
+        double dy = encoderHandler.deltaPerp * Math.cos(imuHandler.getLastHeading()) + encoderHandler.deltaPerp * Math.cos(imuHandler.getLastHeading());
 
         x += dx;
         y += dy;

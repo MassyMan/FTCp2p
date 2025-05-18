@@ -9,6 +9,8 @@ public class IMUHandler {
     private double lastHeading = 0.0;
     private double currentHeading = 0.0;
 
+    MathUtils mathUtils;
+
     public IMUHandler(HardwareMap hardwareMap) {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -26,26 +28,11 @@ public class IMUHandler {
     public double getHeading() {
         return currentHeading;
     }
-
-    public double sinHeading() {
-        return Math.sin(currentHeading);
-    }
-
-    public double cosHeading() {
-        return Math.cos(currentHeading);
-    }
-
     public double getLastHeading() {
         return lastHeading;
     }
-
     public double deltaHeading() {
-        return angleWrap(currentHeading - lastHeading);
+        return MathUtils.angleWrap(currentHeading - lastHeading);
     }
 
-    private double angleWrap(double angle) {
-        while (angle <= -Math.PI) angle += 2 * Math.PI;
-        while (angle > Math.PI) angle -= 2 * Math.PI;
-        return angle;
-    }
 }

@@ -33,9 +33,8 @@ public class ActionSequencer {
     }
 
     // Reset the sequence to the first action
-    public void reset() {
-        currentActionIndex = 0;
-    }
+    public void reset() { currentActionIndex = 0;}
+    public void skipAction(){ currentActionIndex ++;}
 
     // Check if all actions are completed
     public boolean isComplete() {

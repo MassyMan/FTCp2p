@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drivetrain.ActionSequencer;
 import org.firstinspires.ftc.teamcode.drivetrain.DrivetrainActions;
@@ -12,6 +14,9 @@ import org.firstinspires.ftc.teamcode.drivetrain.MoveSlidesPlaceholderAction;
 
 @Autonomous(name = "Sample Auto [Reworked]", group = "Autonomous")
 public class SampleAuto extends LinearOpMode {
+
+    ElapsedTime elapsedTime;
+    elapsedTime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
@@ -47,13 +52,6 @@ public class SampleAuto extends LinearOpMode {
                 moveSlidesAction1.setTriggerCondition(true);  // Trigger first slide move action
             }
 
-            if (localizer.getX() > 10 && !moveSlidesAction2.isComplete()) {
-                moveSlidesAction2.setTriggerCondition(true);  // Trigger second slide move action
-            }
-
-            if (localizer.getX() > 15 && !moveSlidesAction3.isComplete()) {
-                moveSlidesAction3.setTriggerCondition(true);  // Trigger third slide move action
-            }
         }
     }
 }
