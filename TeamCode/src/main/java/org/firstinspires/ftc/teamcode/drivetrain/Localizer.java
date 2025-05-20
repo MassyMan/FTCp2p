@@ -16,6 +16,7 @@ public class Localizer {
 
     public Localizer (HardwareMap hardwareMap) {
         encoderHandler = new EncoderHandler(hardwareMap);
+        imuHandler = new IMUHandler(hardwareMap);
     }
 
     public void setCurrentPosition(double X, double Y, double Heading){
@@ -25,7 +26,7 @@ public class Localizer {
     }
 
     public void updatePosition() {
-        encoderHandler.updateData();
+        encoderHandler.update(imuHandler.deltaHeading());
         imuHandler.update();
 
         double dx = encoderHandler.deltaParCombined * Math.cos(imuHandler.getLastHeading()) - encoderHandler.deltaPerp * Math.sin(imuHandler.getLastHeading());

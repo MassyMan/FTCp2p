@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.drivetrain;
 import java.util.List;
 import java.util.ArrayList;
 
+
+// TODO: Make robot class and make everything in an FSM
+
 public class ActionSequencer {
     private List<Action> actions;
     private int currentActionIndex;

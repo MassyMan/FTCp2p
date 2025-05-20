@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.drivetrain;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class DrivetrainActions {
+public class Drivetrain {
     DcMotorEx leftFront, leftBack, rightBack, rightFront;
     PIDalgs piDalgs;
     Localizer localizer;
@@ -11,7 +11,7 @@ public class DrivetrainActions {
     public boolean moveOn;
 
     // Constructor to initialize motors and localizer
-    public DrivetrainActions(HardwareMap hardwareMap, Localizer localizer) {
+    public Drivetrain(HardwareMap hardwareMap, Localizer localizer) {
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftBack = hardwareMap.get(DcMotorEx.class, "leftBack");
         rightBack = hardwareMap.get(DcMotorEx.class, "rightBack");

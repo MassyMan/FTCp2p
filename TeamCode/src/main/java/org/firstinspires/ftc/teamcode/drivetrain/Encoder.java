@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 public class Encoder {
     EncoderHandler encoderHandler;
     public static final double TICKS_PER_INCH = 0; // I am going to measure this manually RR style with tape measure test
-    // OLD TICKS PER INCH: 2 * Math.PI * WHEEL_RADIUS * GEAR_RATIO / TICKS_PER_REV;
 
     DcMotorEx Encoder;
     public Encoder(DcMotorEx dcMotorEx) {

@@ -2,28 +2,42 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.drivetrain.ActionSequencer;
-import org.firstinspires.ftc.teamcode.drivetrain.DrivetrainActions;
+import org.firstinspires.ftc.teamcode.drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.drivetrain.EncoderHandler;
 import org.firstinspires.ftc.teamcode.drivetrain.Localizer;
-import org.firstinspires.ftc.teamcode.drivetrain.GotoPointAction;
-import org.firstinspires.ftc.teamcode.drivetrain.MoveSlidesPlaceholderAction;
 
 @Autonomous(name = "Sample Auto [Reworked]", group = "Autonomous")
 public class SampleAuto extends LinearOpMode {
 
-    ElapsedTime elapsedTime;
-    elapsedTime = new ElapsedTime();
+    ElapsedTime elapsedTime = new ElapsedTime();
+
+// TODO: REVAMP ALL OF THIS BECAUSE IT SUCKS AND IS OLD AND WON'T ACTUALLY WORK LOLLLL
 
     @Override
     public void runOpMode() {
         // Initialize hardware
         EncoderHandler encoderHandler = new EncoderHandler(hardwareMap);
-        Localizer localizer = new Localizer();
-        DrivetrainActions drivetrain = new DrivetrainActions(hardwareMap, localizer);
+        Localizer localizer = new Localizer(hardwareMap);
+        Drivetrain drivetrain = new Drivetrain(hardwareMap, localizer);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*
         ActionSequencer sequencer = new ActionSequencer();
 
         MoveSlidesPlaceholderAction moveSlidesAction1 = new MoveSlidesPlaceholderAction(1200);
@@ -52,6 +66,8 @@ public class SampleAuto extends LinearOpMode {
                 moveSlidesAction1.setTriggerCondition(true);  // Trigger first slide move action
             }
 
-        }
+
+
+        } */
     }
 }

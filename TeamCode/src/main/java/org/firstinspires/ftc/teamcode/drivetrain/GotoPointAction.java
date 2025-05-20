@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode.drivetrain;
 
 public class GotoPointAction implements Action {
-    private DrivetrainActions dtAction;
+    private Drivetrain dtAction;
     private double targetX, targetY, targetT, moveSpeed, distThreshold;
     private boolean conditionMet;
 
-    public GotoPointAction(DrivetrainActions dtAction, double targetX, double targetY, double targetT, double moveSpeed, double distThreshold, boolean conditionMet) {
+    public GotoPointAction(Drivetrain dtAction, double targetX, double targetY, double targetT, double moveSpeed, double distThreshold, boolean conditionMet) {
         this.dtAction = dtAction;
         this.targetX = targetX;
         this.targetY = targetY;
