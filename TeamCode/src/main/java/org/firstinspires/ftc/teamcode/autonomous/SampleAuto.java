@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drivetrain.Drivetrain;
-import org.firstinspires.ftc.teamcode.drivetrain.EncoderHandler;
+import org.firstinspires.ftc.teamcode.utils.EncoderHandler;
 import org.firstinspires.ftc.teamcode.drivetrain.Localizer;
 
 @Autonomous(name = "Sample Auto [Reworked]", group = "Autonomous")

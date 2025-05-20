@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drivetrain;
+package org.firstinspires.ftc.teamcode.utils;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 // CLASS FOR PULLING DATA FROM AN ENCODER AND GETTING DELTAS

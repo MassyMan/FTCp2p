@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drivetrain;
+package org.firstinspires.ftc.teamcode.utils;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -25,7 +25,6 @@ public class EncoderHandler {
         encoderParL = new Encoder(hardwareMap.get(DcMotorEx.class, "leftFront"));
         encoderParR = new Encoder(hardwareMap.get(DcMotorEx.class, "rightFront"));
         encoderPerp = new Encoder(hardwareMap.get(DcMotorEx.class, "rightBack"));
-
         imuHandler = new IMUHandler(hardwareMap);
     }
 
@@ -37,6 +36,9 @@ public class EncoderHandler {
 
         deltaParCombined = ((encoderParR.getDelta() * parLDist + parLTicks * parRDist)/(parRDist+parLDist));
         deltaPerp = encoderPerp.getDelta() - deltaHeading * perpDist;
+
+
+
 
         /*
         lastParL = encoderParL.lastPosition;

@@ -1,6 +1,8 @@
-package org.firstinspires.ftc.teamcode.drivetrain;
+package org.firstinspires.ftc.teamcode.utils;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.drivetrain.Localizer;
 
 // TODO: APPLY Motor powers in the autonomous mode class, just pull the numbers from here
 
