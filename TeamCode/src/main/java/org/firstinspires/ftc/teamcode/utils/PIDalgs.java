@@ -42,16 +42,17 @@ public class PIDalgs {
         double dT = (eT - pT) / deltaTime;
 
         double powerX = kP * eX + kD * dX;
-        double powerY = kP * eY + kD * dY;
+        double powerY = kP * eY + kD * dY; // Forward
         double powerT = hP * eT + hD * dT;
 
-        double denominator = Math.max(Math.abs(powerY) + Math.abs(powerX) + Math.abs(powerT), 1); // Scaling
+    //    double denominator = Math.max(Math.abs(powerY) + Math.abs(powerX) + Math.abs(powerT), 1); // Scaling
+/*
+        lfPower = (powerY + powerX + powerT) / denominator; // motor powers
+        lbPower = (powerY - powerX + powerT) / denominator;
+        rfPower = (powerY - powerX - powerT) / denominator;
+        rbPower = (powerY + powerX - powerT) / denominator;
 
-        lfPower = Math.min((powerY + powerX + powerT) / denominator, 1); // motor powers
-        lbPower = Math.min((powerY - powerX + powerT) / denominator, 1);
-        rfPower = Math.min((powerY - powerX - powerT) / denominator, 1);
-        rbPower = Math.min((powerY + powerX - powerT) / denominator, 1);
-
+ */
     }
 
 

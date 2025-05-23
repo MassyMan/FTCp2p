@@ -7,6 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.utils.EncoderHandler;
 import org.firstinspires.ftc.teamcode.utils.IMUHandler;
+import static org.firstinspires.ftc.teamcode.utils.Globals.ROBOT_POSITION;
 
 public class Localizer {
 
@@ -15,6 +16,7 @@ public class Localizer {
 
     public double currentHeading;
     public double x, y, heading;
+    public double dx, dy;
 
     public Localizer (HardwareMap hardwareMap) {
         encoderHandler = new EncoderHandler(hardwareMap);
@@ -24,21 +26,24 @@ public class Localizer {
     public void setCurrentPosition(double X, double Y, double Heading){
         x = X;
         y = Y;
-        heading = Heading;
+        heading = Heading; // TODO: ADD IMU HEADING OFFSET
     }
 
-    public void updatePosition() {
+    public void update() {
         encoderHandler.update(imuHandler.deltaHeading());
         imuHandler.update();
 
-        double dx = encoderHandler.deltaParCombined * Math.cos(imuHandler.getLastHeading()) - encoderHandler.deltaPerp * Math.sin(imuHandler.getLastHeading());
-        double dy = encoderHandler.deltaPerp * Math.cos(imuHandler.getLastHeading()) + encoderHandler.deltaPerp * Math.cos(imuHandler.getLastHeading());
+        dx = encoderHandler.deltaParCombined * Math.cos(imuHandler.getLastHeading()) - encoderHandler.deltaPerp * Math.sin(imuHandler.getLastHeading());
+        dy = encoderHandler.deltaPerp * Math.cos(imuHandler.getLastHeading()) + encoderHandler.deltaPerp * Math.cos(imuHandler.getLastHeading());
 
         x += dx;
         y += dy;
         heading = currentHeading;
 
-        Pose2D robotPose = new Pose2D(DistanceUnit.INCH, x, y, AngleUnit.RADIANS, heading);
+        ROBOT_POSITION = new Pose2D(DistanceUnit.INCH, x, y, AngleUnit.RADIANS, heading);
+
+
+
     }
 
     public double getX() { return x; }
