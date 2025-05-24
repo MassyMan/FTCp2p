@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.utils.Localizer;
+import org.firstinspires.ftc.teamcode.utils.PID;
 import org.firstinspires.ftc.teamcode.utils.PIDalgs;
 
 public class Drivetrain {
@@ -57,10 +58,13 @@ public class Drivetrain {
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
-    public Pose2D targetPose = new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.RADIANS, 0);
-    boolean brakeAtEnd, finalAdjustment;
-    public double targetX, targetY, targetT;
+
     public double xError, yError, turnError;
+    public double xThreshold, yThreshold, hThreshold;
+    PID xPID = new PID(0, 0, 0);
+    PID yPID = new PID(0,0,0);
+    PID hPID = new PID(0,0,0);
+
 
     public void update() {
         if (!DRIVETRAIN_ENABLED) { // is this necessary?
@@ -74,8 +78,8 @@ public class Drivetrain {
                 getErrors();
                 piDalgs.runPID(targetX, targetY, targetT);
 
-                if (atPoint(1, 1, 30)) {
-                    if (finalAdjustment) {
+                if (atPoint()) {
+                    if (finalAdjust) {
                         state = State.FINAL_ADJUSTMENT;
                     } else {
                         state = State.BRAKE;
@@ -98,20 +102,46 @@ public class Drivetrain {
         }
     }
 
-    public boolean atPoint(double xT, double yT, double hT) { // Thresholds for determining atPoint
+    public boolean atPoint() { // Thresholds for determining atPoint
         getErrors();
-        return Math.abs(xError) < xT && Math.abs(yError) < yT && Math.abs(turnError) < Math.toRadians(hT);
+        return Math.abs(xError) < xThreshold && Math.abs(yError) < yThreshold && Math.abs(turnError) < Math.toRadians(hThreshold);
     }
 
-    public void goToPoint(Pose2D targetPoint, boolean brake, boolean finaladjust) {
-        targetPose = targetPoint;
-        targetX = targetPose.getX(DistanceUnit.INCH);
-        targetY = targetPose.getY(DistanceUnit.INCH);
-        targetT = targetPose.getHeading(AngleUnit.DEGREES);
+    public void PIDmonster() {
+        double fwd, strafe, turn, turnAdjustThreshold;
+        fwd = Math.abs(xError) > xThreshold/2 ? xPID.update(xError, -maxPower, maxPower) + 0.05 * Math.signum(xError) : 0;
+        strafe = Math.abs(yError) > yThreshold/2 ? yPID.update(yError, -maxPower, maxPower) + 0.05 * Math.signum(yError) : 0;
 
-        brakeAtEnd = brake;
-        finalAdjustment = finaladjust;
-        state = State.GO_TO_POINT;
+        turnAdjustThreshold = (Math.abs(xError) > xThreshold/2 || Math.abs(yError) > yThreshold/2) ? hThreshold/3.0 : hThreshold;
+        turn = Math.abs(turnError) > Math.toRadians(turnAdjustThreshold)/2 ? hPID.update(turnError, -maxPower, maxPower) : 0;
+    }
+
+    public Pose2D targetPose = new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, 0);
+    private Pose2D lastTarget = targetPose;
+    boolean brake, finalAdjust;
+    public double targetX, targetY, targetT;
+    double maxPower = 1.0;
+
+    public void goToPoint(Pose2D targetPoint, boolean brake, boolean finalAdjust, double maxPower) {
+
+        if (targetPoint.getX(DistanceUnit.INCH) != lastTarget.getX(DistanceUnit.INCH) ||
+            targetPoint.getY(DistanceUnit.INCH) != lastTarget.getY(DistanceUnit.INCH) ||
+            targetPoint.getHeading(AngleUnit.DEGREES) != lastTarget.getHeading(AngleUnit.DEGREES)) { // IF THE POINT IS DIFFERENT, GO TO POINT; ELSE DON'T
+
+            targetPose = targetPoint;
+            lastTarget = targetPose; // RESET LAST TARGET TO CURRENT TARGET
+            targetX = targetPose.getX(DistanceUnit.INCH);
+            targetY = targetPose.getY(DistanceUnit.INCH);
+            targetT = targetPose.getHeading(AngleUnit.DEGREES);
+
+            this.brake = brake;
+            this.finalAdjust = finalAdjust;
+            this.maxPower = Math.abs(maxPower);
+
+            state = State.GO_TO_POINT;
+        }
+
+
     }
 
     public void getErrors() {
