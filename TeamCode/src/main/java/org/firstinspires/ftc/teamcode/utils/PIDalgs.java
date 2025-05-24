@@ -4,6 +4,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 // TODO: APPLY Motor powers in the autonomous mode class
 
+// VERY OLD AND DECREPID, DEPRIVED OF ALL LIFE AND JOY; A SHRINKING SOUL IN AN EXPANDING WORLD, NEVER TO BE SEEN AGAIN
+
+// THIS CODE IS DOODOO
+
 
 public class PIDalgs {
 

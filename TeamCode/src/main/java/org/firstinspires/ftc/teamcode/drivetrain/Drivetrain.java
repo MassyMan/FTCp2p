@@ -76,7 +76,7 @@ public class Drivetrain {
 
             case GO_TO_POINT:
                 getErrors();
-                piDalgs.runPID(targetX, targetY, targetT);
+                PIDmonster();
 
                 if (atPoint()) {
                     if (finalAdjust) {
@@ -114,6 +114,8 @@ public class Drivetrain {
 
         turnAdjustThreshold = (Math.abs(xError) > xThreshold/2 || Math.abs(yError) > yThreshold/2) ? hThreshold/3.0 : hThreshold;
         turn = Math.abs(turnError) > Math.toRadians(turnAdjustThreshold)/2 ? hPID.update(turnError, -maxPower, maxPower) : 0;
+
+        setWeightedMotorPowers(strafe, fwd, turn); // APPLY MOTOR POWERS YAY
     }
 
     public Pose2D targetPose = new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, 0);
