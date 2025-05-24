@@ -5,11 +5,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
 public class Globals {
+
     // general
     public static long LOOP_START = System.nanoTime();
     public static double LOOP_TIME = 0.0;
     public static RunMode RUNMODE = RunMode.TESTER;
     public static boolean isRed = false;
+
     // drivetrain
     public static double MIN_MOTOR_POWER_TO_OVERCOME_FRICTION = 0.1; // TODO: TUNE THIS WITH TUNING OPMODE
     public static boolean DRIVETRAIN_ENABLED = true;

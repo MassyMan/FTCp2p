@@ -1,7 +1,9 @@
-package org.firstinspires.ftc.teamcode.utils;
+package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.teamcode.utils.AngleWrap;
 
 public class IMUHandler {
     private final BNO055IMU imu;

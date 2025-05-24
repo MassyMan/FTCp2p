@@ -2,10 +2,8 @@ package org.firstinspires.ftc.teamcode.drivetrain;
 
 
 import static org.firstinspires.ftc.teamcode.utils.Globals.DRIVETRAIN_ENABLED;
-import static org.firstinspires.ftc.teamcode.utils.Globals.ROBOT_POSITION;
 
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -15,24 +13,18 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
-import org.firstinspires.ftc.teamcode.utils.Globals;
+import org.firstinspires.ftc.teamcode.utils.Localizer;
 import org.firstinspires.ftc.teamcode.utils.PIDalgs;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Vector;
 
 public class Drivetrain {
 
-    public Pose2D targetPose = new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.RADIANS, 0);
-    boolean brakeAtEnd;
+
 
     public enum State {
         GO_TO_POINT,
         DRIVE,
         BRAKE,
-        HOLD_POINT,
+        HOLD_POINT, // remove possibly?
         FINAL_ADJUSTMENT,
         IDLE
 
@@ -44,7 +36,7 @@ public class Drivetrain {
     PIDalgs piDalgs;
     Localizer localizer;
 
-
+ // TODO: SINGLETON CLASS WITH ALL OF THIS GARBAGE INSIDE OF IT
     public Drivetrain(HardwareMap hardwareMap, Localizer localizer) {
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftBack = hardwareMap.get(DcMotorEx.class, "leftBack");
@@ -65,12 +57,13 @@ public class Drivetrain {
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
-
-    // TODO: add all functions in red and start making stuff happen!!
-
+    public Pose2D targetPose = new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.RADIANS, 0);
+    boolean brakeAtEnd, finalAdjustment;
+    public double targetX, targetY, targetT;
+    public double xError, yError, turnError;
 
     public void update() {
-        if (!DRIVETRAIN_ENABLED) {
+        if (!DRIVETRAIN_ENABLED) { // is this necessary?
             return;
         }
         localizer.update();
@@ -78,14 +71,10 @@ public class Drivetrain {
         switch (state) {
 
             case GO_TO_POINT:
-                PID();
+                getErrors();
+                piDalgs.runPID(targetX, targetY, targetT);
 
-                if (atPoint()) {
-                    state = State.BRAKE;
-                }
-
-
-                if (atPoint()) {
+                if (atPoint(1, 1, 30)) {
                     if (finalAdjustment) {
                         state = State.FINAL_ADJUSTMENT;
                     } else {
@@ -101,6 +90,7 @@ public class Drivetrain {
 
             case DRIVE:
                 break;
+
             case IDLE:
                 break;
 
@@ -108,16 +98,26 @@ public class Drivetrain {
         }
     }
 
-    double xError = ROBOT_POSITION.x - targetPose.getX;
-
-    public boolean atPointThresholds (double xThresh, double yThresh, double headingThresh) {
-        return Math.abs(xError) < xThresh && Math.abs(yError) < yThresh && Math.abs(turnError) < Math.toRadians(headingThresh);
+    public boolean atPoint(double xT, double yT, double hT) { // Thresholds for determining atPoint
+        getErrors();
+        return Math.abs(xError) < xT && Math.abs(yError) < yT && Math.abs(turnError) < Math.toRadians(hT);
     }
 
-    public void goToPoint(Pose2D targetPoint, boolean brake) {
+    public void goToPoint(Pose2D targetPoint, boolean brake, boolean finaladjust) {
         targetPose = targetPoint;
+        targetX = targetPose.getX(DistanceUnit.INCH);
+        targetY = targetPose.getY(DistanceUnit.INCH);
+        targetT = targetPose.getHeading(AngleUnit.DEGREES);
+
         brakeAtEnd = brake;
+        finalAdjustment = finaladjust;
         state = State.GO_TO_POINT;
+    }
+
+    public void getErrors() {
+        xError = Math.abs(targetX - localizer.x);
+        yError = Math.abs(targetY - localizer.y);
+        turnError = Math.abs(targetT - localizer.heading);
     }
 
     public void driverControl(Gamepad gamepad) {
@@ -126,7 +126,7 @@ public class Drivetrain {
         double forward = gamepad.left_stick_y;
         double strafe = gamepad.left_stick_x;
         double turn = -gamepad.right_stick_x;
-        if (gamepad.right_bumper) {
+        if (gamepad.right_bumper) { // Right bumper turns on/off slow mode (hold for enable)
             forward = forward * slowMode;
             strafe = strafe * slowMode;
             turn = turn * slowMode;
@@ -141,13 +141,13 @@ public class Drivetrain {
         rightFront.setPower(rf);
     }
 
-    public void setWeightedMotorPowers(double forward, double strafe, double turn) { // Mecanum movement
-        double denominator = Math.max(Math.abs(forward) + Math.abs(strafe) + Math.abs(turn), 1); // Scaling
+    public void setWeightedMotorPowers(double x, double y, double t) { // Mecanum movement
+        double denominator = Math.max(Math.abs(x) + Math.abs(y) + Math.abs(t), 1); // Scaling
         double[] weightPowers = new double[]{
-            (forward + strafe + turn) / denominator,
-            (forward - strafe + turn) / denominator,
-            (forward - strafe - turn) / denominator,
-            (forward + strafe - turn) / denominator
+            (y + x + t) / denominator,
+            (y - x + t) / denominator,
+            (y - x - t) / denominator,
+            (y + x - t) / denominator
         };
         setMotorPowers(weightPowers[0], weightPowers[1], weightPowers[2], weightPowers[3]);
     }

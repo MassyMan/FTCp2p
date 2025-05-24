@@ -1,12 +1,12 @@
-package org.firstinspires.ftc.teamcode.drivetrain;
+package org.firstinspires.ftc.teamcode.utils;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
-import org.firstinspires.ftc.teamcode.utils.EncoderHandler;
-import org.firstinspires.ftc.teamcode.utils.IMUHandler;
+import org.firstinspires.ftc.teamcode.hardware.EncoderHandler;
+import org.firstinspires.ftc.teamcode.hardware.IMUHandler;
 import static org.firstinspires.ftc.teamcode.utils.Globals.ROBOT_POSITION;
 
 public class Localizer {

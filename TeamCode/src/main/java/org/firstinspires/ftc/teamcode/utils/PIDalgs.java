@@ -2,9 +2,7 @@ package org.firstinspires.ftc.teamcode.utils;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.drivetrain.Localizer;
-
-// TODO: APPLY Motor powers in the autonomous mode class, just pull the numbers from here
+// TODO: APPLY Motor powers in the autonomous mode class
 
 
 public class PIDalgs {
@@ -37,6 +35,8 @@ public class PIDalgs {
         eY = targetY - currentY;
         eT = targetT - currentT;
 
+
+
         double dX = (eX - pX) / deltaTime; // deltas for errors
         double dY = (eY - pY) / deltaTime;
         double dT = (eT - pT) / deltaTime;
@@ -44,6 +44,8 @@ public class PIDalgs {
         double powerX = kP * eX + kD * dX;
         double powerY = kP * eY + kD * dY; // Forward
         double powerT = hP * eT + hD * dT;
+
+
 
     //    double denominator = Math.max(Math.abs(powerY) + Math.abs(powerX) + Math.abs(powerT), 1); // Scaling
 /*
