@@ -4,17 +4,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 // COPIED FROM CLUELESS CENTERSTAGE
 
-// NOT IN USE AT THE MOMENT
-
 // https://www.ctrlaltftc.com/the-pid-controller
 
 public class PID {
     public double p;
     public double i;
     public double d;
-    public PID(double P, double I, double D){
+    public PID(double P, double D){
         p=P;
-        i=I;
+   //     i=I;
         d=D;
     }
     double integral = 0;
@@ -37,18 +35,18 @@ public class PID {
         lastLoopTime = currentTime; // lastLoopTime's start time
 
         double proportion = p * error;
-        integral += error * i * loopTime;
+      //  integral += error * i * loopTime;
         double derivative = d * (error - lastError)/loopTime;
 
         lastError = error;
         counter ++;
 
-        return Utils.minMaxClip(proportion + integral + derivative, min, max);
+        return Utils.minMaxClip(proportion + derivative, min, max);
     }
 
-    public void updatePID(double p, double i, double d) {
+    public void updatePID(double p, double d) {
         this.p = p;
-        this.i = i;
+   //     this.i = i;
         this.d = d;
     }
 }

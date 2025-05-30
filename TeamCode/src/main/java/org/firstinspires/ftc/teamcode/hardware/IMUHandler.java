@@ -3,14 +3,15 @@ package org.firstinspires.ftc.teamcode.hardware;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.utils.AngleWrap;
+
+import org.firstinspires.ftc.teamcode.utils.Utils;
 
 public class IMUHandler {
     private final BNO055IMU imu;
     private double lastHeading = 0.0;
     private double currentHeading = 0.0;
 
-    AngleWrap mathUtils;
+    Utils utils;
 
     public IMUHandler(HardwareMap hardwareMap) {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
@@ -19,6 +20,7 @@ public class IMUHandler {
         imu.initialize(parameters);
         update(); // Set initial heading
     }
+
 
     public void update() {
         lastHeading = currentHeading;
@@ -33,7 +35,7 @@ public class IMUHandler {
         return lastHeading;
     }
     public double deltaHeading() {
-        return AngleWrap.angleWrap(currentHeading - lastHeading);
+        return Utils.headingClip(currentHeading - lastHeading);
     }
 
 }
